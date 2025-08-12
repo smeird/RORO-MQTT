@@ -1,10 +1,17 @@
 # RORO-MQTT
 
+
 This project provides a small C++ module intended for INDI/EKOS setups to
 control a roll-on roll-off roof through an MQTT service.  The
 `MQTTRoofController` class publishes open/close commands, handles optional
 limit switch feedback, power control, and percentage-open reporting over
 configurable MQTT topics.
+
+This project provides a simple module intended for INDI/EKOS setups to
+control a roll-on roll-off roof through an MQTT service.  The
+`MQTTRoofController` class can publish open/close commands and handle
+limit switch feedback over configurable MQTT topics.
+
 
 ## Features
 
@@ -15,6 +22,7 @@ configurable MQTT topics.
 * Optional power control topic
 
 ## Usage
+
 
 ```cpp
 #include "mqtt_roof_controller.h"
@@ -44,4 +52,5 @@ Compile with:
 ```
 g++ -std=c++17 -DPAHO_MQTT src/*.cpp tests/test_driver.cpp \
     -lpaho-mqttpp3 -lpaho-mqtt3as -o example
+
 ```
