@@ -1,9 +1,17 @@
 # RORO-MQTT
 
+
+This project provides a small C++ module intended for INDI/EKOS setups to
+control a roll-on roll-off roof through an MQTT service.  The
+`MQTTRoofController` class publishes open/close commands, handles optional
+limit switch feedback, power control, and percentage-open reporting over
+configurable MQTT topics.
+
 This project provides a simple module intended for INDI/EKOS setups to
 control a roll-on roll-off roof through an MQTT service.  The
 `MQTTRoofController` class can publish open/close commands and handle
 limit switch feedback over configurable MQTT topics.
+
 
 ## Features
 
@@ -15,22 +23,34 @@ limit switch feedback over configurable MQTT topics.
 
 ## Usage
 
-```python
-from roro_mqtt import MQTTRoofController
 
-controller = MQTTRoofController(
-    host="mqtt.example.net",
-    username="user",
-    password="secret",
-    topic_open="observatory/roof/open",
-    topic_close="observatory/roof/close",
-    topic_open_limit="observatory/roof/open_limit",
-    topic_close_limit="observatory/roof/close_limit",
-    topic_percent="observatory/roof/percent",
-    topic_power="observatory/roof/power",
-)
+```cpp
+#include "mqtt_roof_controller.h"
+#include "mqtt_client.h"
+#include <memory>
 
-controller.connect()
-controller.set_power(True)
-controller.open_roof()
+int main() {
+    auto client = std::make_shared<PahoMqttClient>(
+        "tcp://mqtt.example.net:1883", "roof_controller", "user", "secret");
+    MQTTRoofController controller(
+        client,
+        "observatory/roof/open",
+        "observatory/roof/close",
+        "observatory/roof/open_limit",
+        "observatory/roof/close_limit",
+        "observatory/roof/percent",
+        "observatory/roof/power");
+
+    controller.connect();
+    controller.set_power(true);
+    controller.open_roof();
+}
+```
+
+Compile with:
+
+```
+g++ -std=c++17 -DPAHO_MQTT src/*.cpp tests/test_driver.cpp \
+    -lpaho-mqttpp3 -lpaho-mqtt3as -o example
+
 ```
