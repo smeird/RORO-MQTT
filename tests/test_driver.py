@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from roro_mqtt.driver import MQTTRoofController
+from roro_mqtt.driver import MQTTRoofController, configure_topics
 
 
 def make_msg(topic, payload):
@@ -13,6 +13,7 @@ def make_msg(topic, payload):
 
 
 def test_publish_commands():
+    configure_topics()  # reset defaults
     client = MagicMock()
     driver = MQTTRoofController(
         host="localhost",
@@ -33,6 +34,7 @@ def test_publish_commands():
 
 
 def test_state_updates():
+    configure_topics()  # reset defaults
     client = MagicMock()
     driver = MQTTRoofController(
         host="localhost",
@@ -50,3 +52,21 @@ def test_state_updates():
 
     driver._on_message(client, None, make_msg("percent", b"45"))
     assert driver.percent_open == 45.0
+
+
+def test_configure_topics():
+    client = MagicMock()
+    configure_topics(open="cfg/open", close="cfg/close", power="cfg/power")
+    driver = MQTTRoofController(host="localhost", client=client)
+
+    driver.open_roof()
+    client.publish.assert_any_call("cfg/open", payload="1")
+
+    driver.close_roof()
+    client.publish.assert_any_call("cfg/close", payload="1")
+
+    driver.set_power(True)
+    client.publish.assert_any_call("cfg/power", payload="ON")
+
+    # Reset for other tests
+    configure_topics()
