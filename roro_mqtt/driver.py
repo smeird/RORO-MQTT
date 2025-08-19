@@ -1,5 +1,51 @@
+"""High level MQTT roof controller."""
+
 import paho.mqtt.client as mqtt
-from typing import Optional
+from typing import Optional, Dict
+
+
+# ---------------------------------------------------------------------------
+# Default topic configuration
+# ---------------------------------------------------------------------------
+
+#: Built-in defaults for all MQTT topic paths.  These are copied into
+#: ``_TOPICS`` which holds the currently active defaults.  They can be
+#: overridden at runtime via :func:`configure_topics`.
+DEFAULT_TOPICS: Dict[str, Optional[str]] = {
+    "open": "roof/open",
+    "close": "roof/close",
+    "open_limit": None,
+    "close_limit": None,
+    "percent": None,
+    "power": None,
+}
+
+# Mutable copy that stores the active defaults
+_TOPICS: Dict[str, Optional[str]] = DEFAULT_TOPICS.copy()
+
+
+def configure_topics(**kwargs) -> None:
+    """Configure default MQTT topic paths.
+
+    Parameters
+    ----------
+    **kwargs: optional
+        Any of ``open``, ``close``, ``open_limit``, ``close_limit``,
+        ``percent`` or ``power``.  Passing no arguments resets all
+        defaults back to the built-in values.
+    """
+
+    global _TOPICS
+
+    if not kwargs:
+        # Reset to factory defaults
+        _TOPICS = DEFAULT_TOPICS.copy()
+        return
+
+    for key, value in kwargs.items():
+        if key in _TOPICS:
+            _TOPICS[key] = value
+
 
 class MQTTRoofController:
     """Control a roll-on roll-off roof via MQTT."""
@@ -10,8 +56,8 @@ class MQTTRoofController:
         port: int = 1883,
         username: Optional[str] = None,
         password: Optional[str] = None,
-        topic_open: str = "roof/open",
-        topic_close: str = "roof/close",
+        topic_open: Optional[str] = None,
+        topic_close: Optional[str] = None,
         topic_open_limit: Optional[str] = None,
         topic_close_limit: Optional[str] = None,
         topic_percent: Optional[str] = None,
@@ -28,11 +74,12 @@ class MQTTRoofController:
             MQTT broker port, default 1883.
         username, password: optional
             Credentials for the broker.
-        topic_open, topic_close: str
-            Topics to publish open/close commands.
+        topic_open, topic_close: optional
+            Topics to publish open/close commands.  If not supplied the
+            values configured via :func:`configure_topics` are used.
         topic_open_limit, topic_close_limit: optional
             Topics publishing limit switch states. Payload ``b"1"`` means
-action triggered.
+            action triggered.
         topic_percent: optional
             Topic with percentage open payload (0-100).
         topic_power: optional
@@ -42,12 +89,22 @@ action triggered.
         """
         self.host = host
         self.port = port
-        self.topic_open = topic_open
-        self.topic_close = topic_close
-        self.topic_open_limit = topic_open_limit
-        self.topic_close_limit = topic_close_limit
-        self.topic_percent = topic_percent
-        self.topic_power = topic_power
+        self.topic_open = topic_open if topic_open is not None else _TOPICS["open"]
+        self.topic_close = (
+            topic_close if topic_close is not None else _TOPICS["close"]
+        )
+        self.topic_open_limit = (
+            topic_open_limit if topic_open_limit is not None else _TOPICS["open_limit"]
+        )
+        self.topic_close_limit = (
+            topic_close_limit if topic_close_limit is not None else _TOPICS["close_limit"]
+        )
+        self.topic_percent = (
+            topic_percent if topic_percent is not None else _TOPICS["percent"]
+        )
+        self.topic_power = (
+            topic_power if topic_power is not None else _TOPICS["power"]
+        )
 
         self.client = client or mqtt.Client()
         if username is not None and password is not None:
