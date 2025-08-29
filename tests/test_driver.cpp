@@ -35,7 +35,8 @@ int main() {
                                  "roof/open_limit",
                                  "roof/close_limit",
                                  "roof/percent",
-                                 "roof/power");
+                                 "roof/power",
+                                 "telescope/parked");
     controller.connect();
 
     controller.set_power(true);
@@ -52,8 +53,10 @@ int main() {
     // Simulate limit switch callbacks
     client->emit("roof/open_limit", "1");
     client->emit("roof/close_limit", "1");
+    client->emit("telescope/parked", "1");
     assert(controller.is_open());
     assert(controller.is_closed());
+    assert(controller.is_telescope_parked());
 
     std::cout << "All tests passed\n";
     return 0;

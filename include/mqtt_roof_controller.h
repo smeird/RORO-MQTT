@@ -14,7 +14,8 @@ public:
                        const std::string& topic_open_limit = "",
                        const std::string& topic_close_limit = "",
                        const std::string& topic_percent = "",
-                       const std::string& topic_power = "");
+                       const std::string& topic_power = "",
+                       const std::string& topic_telescope = "");
 
     void connect();
     void disconnect();
@@ -25,6 +26,7 @@ public:
 
     bool is_open() const { return open_state_; }
     bool is_closed() const { return close_state_; }
+    bool is_telescope_parked() const { return telescope_parked_; }
 
 private:
     std::shared_ptr<IMqttClient> client_;
@@ -34,9 +36,11 @@ private:
     std::string topic_close_limit_;
     std::string topic_percent_;
     std::string topic_power_;
+    std::string topic_telescope_;
 
     bool open_state_ = false;
     bool close_state_ = false;
+    bool telescope_parked_ = false;
 };
 
 #endif // MQTT_ROOF_CONTROLLER_H
