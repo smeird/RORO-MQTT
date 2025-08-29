@@ -1,0 +1,6 @@
+<indi> 
+  <device label="MQTT Universal ROR" name="MQTT Universal ROR"> 
+    <driver name="indi-mqtt-universalror" />
+    <version>1.0</version>
+  </device>
+</indi>

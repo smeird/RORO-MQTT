@@ -1,0 +1,43 @@
+{
+  "mqtt": {
+    "broker": "mqtt://10.0.0.5:1883",
+    "client_id": "mqtt-universalror-1",
+    "username": "roof",
+    "password": "secret",
+    "qos": 1,
+    "retain_commands": false,
+    "topic_prefix": "observatory"
+  },
+  "io_binding": "HYBRID",
+  "topics": {
+    "in": {
+      "limit_open": "observatory/roof/limit/open",
+      "limit_closed": "observatory/roof/limit/closed",
+      "scope_parked": "observatory/scope/parked",
+      "weather_rain": "observatory/weather/rain",
+      "cloud_temp": "observatory/weather/cloud_temp",
+      "wind_speed": "observatory/weather/wind",
+      "estop": "observatory/power/estop"
+    },
+    "out": {
+      "open": "observatory/roof/cmd/open",
+      "close": "observatory/roof/cmd/close",
+      "stop": "observatory/roof/cmd/stop",
+      "enable": "observatory/power/roof_enable"
+    }
+  },
+  "policy": {
+    "cloud_temp_clear_c": -15.0,
+    "wind_close_threshold_mps": 12.0,
+    "auto_close_on_weather": true,
+    "manual_override_secs": 900,
+    "allow_open_when_scope_unparked": false,
+    "auto_park_mount": true
+  },
+  "timeouts_ms": {
+    "open": 90000,
+    "close": 90000,
+    "mount_park": 180000,
+    "debounce": 150
+  }
+}
