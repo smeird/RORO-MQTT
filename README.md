@@ -60,21 +60,6 @@ g++ -std=c++17 -DPAHO_MQTT src/*.cpp tests/test_driver.cpp \
 
 ```
 
-## Python usage
-
-The Python package exposes the same controller.  Default MQTT topic paths can
-be changed at runtime:
-
-```python
-from roro_mqtt import MQTTRoofController, configure_topics
-
-configure_topics(open="observatory/roof/open", close="observatory/roof/close")
-controller = MQTTRoofController(host="mqtt.example.net")
-```
-
-Call ``configure_topics()`` without arguments to reset to the built-in
-defaults.
-
 ## INDI Driver
 
 The `indi-mqtt-universalror` driver implements the [Universal ROR
