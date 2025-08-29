@@ -12,7 +12,11 @@ static const char *PROP_CLOSE = "DOME_CLOSE";
 static const char *PROP_STOP = "DOME_STOP";
 
 MQTTUniversalROR::MQTTUniversalROR()
-    : client_("tcp://localhost:1883", "indi-mqtt-universalror") {}
+    : client_("tcp://localhost:1883", "indi-mqtt-universalror")
+{
+    setVersion(1, 0);
+    SetDomeCapability(DOME_CAN_ABORT | DOME_CAN_PARK);
+}
 
 const char *MQTTUniversalROR::getDefaultName() { return "MQTT Universal ROR"; }
 
