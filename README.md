@@ -6,6 +6,17 @@ INDI driver implementing the Universal Roll‑Off‑Roof (ROR) approach.  The
 `indi-mqtt-universalror` driver uses MQTT for all I/O and follows the dome
 semantics introduced in INDI v2.0.9.
 
+## Clone and Build (Linux)
+
+```bash
+git clone https://github.com/yourusername/RORO-MQTT.git
+cd RORO-MQTT
+mkdir build && cd build
+cmake ..
+make -j
+ctest
+```
+
 
 ## Features
 
