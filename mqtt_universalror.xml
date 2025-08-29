@@ -1,6 +1,8 @@
-<indi> 
-  <device label="MQTT Universal ROR" name="MQTT Universal ROR"> 
-    <driver name="indi-mqtt-universalror" />
-    <version>1.0</version>
-  </device>
+<indi>
+  <devGroup group="Domes">
+    <device label="MQTT Universal ROR" manufacturer="RORO-MQTT">
+      <driver name="MQTT Universal ROR">indi-mqtt-universalror</driver>
+      <version>1.0</version>
+    </device>
+  </devGroup>
 </indi>
