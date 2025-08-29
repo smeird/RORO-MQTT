@@ -83,6 +83,12 @@ and delegates all physical I/O to MQTT topics.  Limit switches and safety
 events are mirrored to standard INDI dome properties.  A simple state machine
 guards valid transitions and is unit tested with GoogleTest.
 
+### Configuration
+
+The driver adds an `MQTT_TOPICS` text property in the *Configuration* tab.
+Topics for open/close/stop commands and limit switches can be edited and are
+stored using the standard INDI configuration mechanism.
+
 ### Build
 
 ```

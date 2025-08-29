@@ -24,17 +24,24 @@ public:
 
     void mqtt_message_arrived(std::string topic, std::string payload);
 
+    virtual bool ISNewText(const char *dev, const char *name, char *texts[], char *names[], int n) override;
+    virtual bool saveConfigItems(FILE *fp) override;
+
 private:
     void publish_command(const std::string &topic);
     void setup_mqtt();
 
     mqtt::async_client client_;
     RoofStateMachine fsm_;
-    std::string topic_open_; 
+
+    std::string topic_open_;
     std::string topic_close_;
     std::string topic_stop_;
     std::string topic_limit_open_;
     std::string topic_limit_closed_;
+
+    IText mqtt_topics_t_[5];
+    ITextVectorProperty mqtt_topics_tp_;
 };
 
 } // namespace roro
