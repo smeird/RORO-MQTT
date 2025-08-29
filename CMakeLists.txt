@@ -30,6 +30,10 @@ target_link_libraries(state_machine_test gtest_main pthread)
 enable_testing()
 add_test(NAME state_machine_test COMMAND state_machine_test)
 
+add_executable(test_driver tests/test_driver.cpp src/mqtt_roof_controller.cpp)
+target_link_libraries(test_driver pthread)
+add_test(NAME test_driver COMMAND test_driver)
+
 install(TARGETS indi-mqtt-universalror DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES mqtt_universalror.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/indi)
 install(FILES indi-mqtt-universalror.rules DESTINATION ${CMAKE_INSTALL_LIBDIR}/udev/rules.d)
