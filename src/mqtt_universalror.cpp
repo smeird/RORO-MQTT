@@ -15,6 +15,9 @@ MQTTUniversalROR::MQTTUniversalROR()
     : client_("tcp://localhost:1883", "indi-mqtt-universalror")
 {
     setVersion(1, 0);
+    // Advertise this driver as a dome so that KStars lists it under the
+    // Dome devices and enables the appropriate controls in the GUI.
+    setDriverInterface(DOME_INTERFACE);
     SetDomeCapability(DOME_CAN_ABORT | DOME_CAN_PARK);
 }
 
