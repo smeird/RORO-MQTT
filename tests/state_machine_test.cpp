@@ -20,6 +20,14 @@ TEST(StateMachine, Stop) {
     EXPECT_EQ(fsm.state(), RoofState::ERROR);
 }
 
+TEST(StateMachine, CommandsIgnoredInErrorState) {
+    RoofStateMachine fsm;
+    EXPECT_TRUE(fsm.command_open());
+    fsm.command_stop();
+    EXPECT_FALSE(fsm.command_open());
+    EXPECT_FALSE(fsm.command_close());
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

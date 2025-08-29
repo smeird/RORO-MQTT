@@ -6,7 +6,8 @@ RoofStateMachine::RoofStateMachine() : state_(RoofState::UNKNOWN) {}
 
 bool RoofStateMachine::command_open() {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (state_ == RoofState::OPEN || state_ == RoofState::OPENING)
+    if (state_ == RoofState::OPEN || state_ == RoofState::OPENING ||
+        state_ == RoofState::ERROR)
         return false;
     state_ = RoofState::OPENING;
     return true;
@@ -14,7 +15,8 @@ bool RoofStateMachine::command_open() {
 
 bool RoofStateMachine::command_close() {
     std::lock_guard<std::mutex> lock(mutex_);
-    if (state_ == RoofState::CLOSED || state_ == RoofState::CLOSING)
+    if (state_ == RoofState::CLOSED || state_ == RoofState::CLOSING ||
+        state_ == RoofState::ERROR)
         return false;
     state_ = RoofState::CLOSING;
     return true;
