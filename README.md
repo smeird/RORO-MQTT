@@ -139,5 +139,5 @@ indiserver -v indi-mqtt-universalror -n
 
 ### Example Config
 
-See [`config.sample.json`](config.sample.json) for a full configuration
+See [`config.sample.xml`](config.sample.xml) for a full configuration
 including topic mappings and safety policies.
