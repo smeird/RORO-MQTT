@@ -19,7 +19,7 @@ popd >/dev/null
 
 for prefix in /usr /usr/local; do
   $SUDO rm -f "$prefix/bin/indi-mqtt-universalror" \
-    "$prefix/share/indi/mqtt_universalror.xml" \
+    "$prefix/share/indi/indi-mqtt-universalror.xml" \
     "$prefix/lib/udev/rules.d/indi-mqtt-universalror.rules" || true
 done
 

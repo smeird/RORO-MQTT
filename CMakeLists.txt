@@ -35,5 +35,9 @@ target_link_libraries(test_driver pthread)
 add_test(NAME test_driver COMMAND test_driver)
 
 install(TARGETS indi-mqtt-universalror DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES mqtt_universalror.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/indi)
+configure_file(indi-mqtt-universalror.xml.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/indi-mqtt-universalror.xml
+               @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/indi-mqtt-universalror.xml
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/indi)
 install(FILES indi-mqtt-universalror.rules DESTINATION ${CMAKE_INSTALL_LIBDIR}/udev/rules.d)
