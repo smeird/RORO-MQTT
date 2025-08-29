@@ -1,16 +1,10 @@
 # RORO-MQTT
 
 
-This project provides a small C++ module intended for INDI/EKOS setups to
-control a roll-on roll-off roof through an MQTT service.  The
-`MQTTRoofController` class publishes open/close commands, handles optional
-limit switch feedback, power control, and percentage-open reporting over
-configurable MQTT topics.
-
-This project provides a simple module intended for INDI/EKOS setups to
-control a roll-on roll-off roof through an MQTT service.  The
-`MQTTRoofController` class can publish open/close commands and handle
-limit switch feedback over configurable MQTT topics.
+This project now provides both a small helper library and a production-grade
+INDI driver implementing the Universal Roll‑Off‑Roof (ROR) approach.  The
+`indi-mqtt-universalror` driver uses MQTT for all I/O and follows the dome
+semantics introduced in INDI v2.0.9.
 
 
 ## Features
@@ -69,3 +63,70 @@ controller = MQTTRoofController(host="mqtt.example.net")
 
 Call ``configure_topics()`` without arguments to reset to the built-in
 defaults.
+
+## INDI Driver
+
+The `indi-mqtt-universalror` driver implements the [Universal ROR
+specification](https://indilib.org/develop/developer-manual/143-dome.html)
+and delegates all physical I/O to MQTT topics.  Limit switches and safety
+events are mirrored to standard INDI dome properties.  A simple state machine
+guards valid transitions and is unit tested with GoogleTest.
+
+### Build
+
+```
+mkdir build && cd build
+cmake .. && make -j
+ctest
+```
+
+### Sequence (open)
+
+```mermaid
+sequenceDiagram
+    participant Ekos
+    participant Driver
+    participant MQTT
+    Ekos->>Driver: DOME_UNPARK
+    Driver->>MQTT: publish open
+    MQTT-->>Driver: limit_open
+    Driver-->>Ekos: state OPEN
+```
+
+### Sequence (close)
+
+```mermaid
+sequenceDiagram
+    participant Ekos
+    participant Driver
+    participant MQTT
+    Ekos->>Driver: DOME_PARK
+    Driver->>MQTT: publish close
+    MQTT-->>Driver: limit_closed
+    Driver-->>Ekos: state CLOSED
+```
+
+### Fault Recovery
+
+```mermaid
+sequenceDiagram
+    participant Weather
+    participant Driver
+    participant MQTT
+    Weather-->>Driver: rain alert
+    Driver->>MQTT: publish stop
+    Driver->>MQTT: publish close
+```
+
+### Simulation
+
+Run the driver in simulation mode:
+
+```
+indiserver -v indi-mqtt-universalror -n
+```
+
+### Example Config
+
+See [`config.sample.json`](config.sample.json) for a full configuration
+including topic mappings and safety policies.
