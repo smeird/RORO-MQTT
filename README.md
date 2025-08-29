@@ -9,7 +9,7 @@ semantics introduced in INDI v2.0.9.
 ## Clone and Build (Linux)
 
 ```bash
-git clone https://github.com/yourusername/RORO-MQTT.git
+git clone https://github.com/smeird/RORO-MQTT.git
 cd RORO-MQTT
 mkdir build && cd build
 cmake ..
